@@ -7,12 +7,10 @@
     %h1 Run gist!
 
     %form#gist_form
-      %input{:type => :text}
-      %input{:type => :submit}
+      %input{:type => :text, :value => params[:gist]}
+      %input{:type => :submit, :value => "Get"}
 
     %ul#gist_files
 
     %script{:type => "text/javascript", :src  => "/javascripts/jquery.min.js"}
     %script{:type => "text/javascript", :src  => "/javascripts/index.js"}
-    :javascript
-      $(function () { $("#gist_form").submit(fetchGist) });
