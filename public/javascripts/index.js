@@ -13,7 +13,9 @@ function GistPreview(callback) {
     displayGistFiles: function (data) {
       list.empty();
       $.each(data.files, function (filename, opts) {
-        list.append("<li><a href='" + opts.raw_url + "'>" + filename + "</a></li>");
+        var link = '<a href="' + opts.raw_url + '">' + filename + '</a>';
+        var content = '<textarea rows="10" cols="50">' + opts.content + '</textarea>'
+        list.append('<li>' + link + '<br />' + content + '</li>');
       });
     },
 
