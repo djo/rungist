@@ -15,7 +15,9 @@ function GistPreview(callback) {
       $.each(data.files, function (filename, opts) {
         var link = '<a href="' + opts.raw_url + '">' + filename + '</a>';
         var content = '<textarea rows="10" cols="50">' + opts.content + '</textarea>'
-        list.append('<li>' + link + '<br />' + content + '</li>');
+        var button = '<a class="run" href="#run">Run</a>';
+        var result = '<div class="result"></div>';
+        list.append('<li class="gist">' + link + '<br />' + content + '<br />' + button + '<br />' + result + '</li>');
       });
     },
 
@@ -60,9 +62,40 @@ function GistPreview(callback) {
   };
 };
 
+function RunGist () {
+  var list = $("#gist_files"),
+
+  self = {
+    postGist: function (e) {
+      e.preventDefault();
+      var link = $(this),
+          gist = link.parents('li.gist'),
+          textarea = $('textarea', gist),
+          result = $('.result', gist);
+
+      $.post('/run', { gist: textarea.val() })
+       .success(function (data) { result.html(data); })
+       .error(function (jqXHR) { alert(jqXHR.responseText); });
+    },
+
+    bindEvents: function () {
+      list.on('click', '.run', self.postGist);
+    },
+
+    init: function () {
+      self.bindEvents();
+    }
+  };
+
+  return self.init();
+};
+
 var jsonpCallback;
 
 $(function () {
+  // Init GistPreview
   var gp = new GistPreview(function (data) { jsonpCallback(data); });
   jsonpCallback = function (data) { gp.parseResponse(data) };
+  // Init RunGist
+  new RunGist();
 });
