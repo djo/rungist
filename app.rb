@@ -1,5 +1,5 @@
 require "sinatra/reloader" if development?
-require 'sandbox'
+require "lib/rungist_sandbox"
 
 set :haml, :format => :html5
 set :views, File.expand_path(File.dirname(__FILE__) + '/views' )
@@ -10,9 +10,7 @@ end
 
 post '/run' do
   begin
-    sandbox = Sandbox.safe
-    sandbox.activate!
-    result = sandbox.eval(params[:gist], :timeout => 1)
+    result = RungistSandbox.eval(params[:gist])
     [200, result.to_s]
   rescue Sandbox::SandboxException, Sandbox::TimeoutError => ex
     [400, ex.message]
