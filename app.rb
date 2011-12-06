@@ -10,7 +10,7 @@ end
 
 post '/run' do
   begin
-    result = RungistSandbox.eval(params[:gist])
+    result = RungistSandbox.eval(params[:code], :language => params[:language])
     [200, result.to_s]
   rescue Sandbox::SandboxException, Sandbox::TimeoutError => ex
     [400, ex.message]

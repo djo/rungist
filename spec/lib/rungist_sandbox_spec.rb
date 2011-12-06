@@ -23,5 +23,11 @@ describe "RungistSandbox" do
       RungistSandbox.eval("Dir.glob('/*')").should be_empty
     end
 
+    it "renders ERB template" do
+      actual = "<div id='gist' class=\"gist\"><%= 1 + 1 %></div>"
+      expected = "<div id='gist' class=\"gist\">2</div>"
+      RungistSandbox.eval(actual, :language => 'HTML+ERB').should eq(expected)
+    end
+
   end
 end

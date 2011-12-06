@@ -14,10 +14,11 @@ function GistPreview(callback) {
       list.empty();
       $.each(data.files, function (filename, opts) {
         var link = '<a href="' + opts.raw_url + '">' + filename + '</a>';
-        var content = '<textarea rows="10" cols="50">' + opts.content + '</textarea>'
+        var content = '<textarea rows="10" cols="50">' + opts.content + '</textarea>';
         var button = '<a class="run" href="#run">Run</a>';
         var result = '<div class="result"></div>';
         list.append('<li class="gist">' + link + '<br />' + content + '<br />' + button + '<br />' + result + '</li>');
+        $('.gist:last', list).data("language", opts.language);
       });
     },
 
@@ -60,7 +61,7 @@ function GistPreview(callback) {
       }
     }
   };
-};
+}
 
 function RunGist () {
   var list = $("#gist_files"),
@@ -68,12 +69,14 @@ function RunGist () {
   self = {
     postGist: function (e) {
       e.preventDefault();
+
       var link = $(this),
           gist = link.parents('li.gist'),
+          language = gist.data('language'),
           textarea = $('textarea', gist),
           result = $('.result', gist);
 
-      $.post('/run', { gist: textarea.val() })
+      $.post('/run', { code: textarea.val(), language: language })
        .success(function (data) { result.html(data); })
        .error(function (jqXHR) { alert(jqXHR.responseText); });
     },
@@ -88,14 +91,4 @@ function RunGist () {
   };
 
   return self.init();
-};
-
-var jsonpCallback;
-
-$(function () {
-  // Init GistPreview
-  var gp = new GistPreview(function (data) { jsonpCallback(data); });
-  jsonpCallback = function (data) { gp.parseResponse(data) };
-  // Init RunGist
-  new RunGist();
-});
+}

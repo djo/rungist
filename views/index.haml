@@ -14,3 +14,14 @@
 
     %script{:type => "text/javascript", :src  => "/javascripts/jquery.min.js"}
     %script{:type => "text/javascript", :src  => "/javascripts/index.js"}
+
+    :javascript
+      var jsonpCallback;
+
+      $(function () {
+        // Init GistPreview
+        var gp = new GistPreview(function (data) { jsonpCallback(data) });
+        jsonpCallback = function (data) { gp.parseResponse(data) };
+        // Init RunGist
+        new RunGist();
+      });
