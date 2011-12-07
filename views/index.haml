@@ -17,11 +17,14 @@
 
     :javascript
       var jsonpCallback;
+      var RG = { sandboxLanguages: #{RungistSandbox::SUPPORTED_LANGUAGES},
+                 clientLanguages: ["CSS", "JavaScript"]  };
 
       $(function () {
         // Init GistPreview
         var gp = new GistPreview(function (data) { jsonpCallback(data) });
         jsonpCallback = function (data) { gp.parseResponse(data) };
+
         // Init RunGist
         new RunGist();
       });

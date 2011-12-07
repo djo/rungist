@@ -6,33 +6,30 @@ Sandbox::Safe.const_set('STRING_METHODS', SANDBOX_STRING_METHODS)
 
 class RungistSandbox
 
-  def self.eval(code, opts = {})
+  SUPPORTED_LANGUAGES = ['Ruby', 'HTML+ERB']
+
+  def self.run(code, opts = {})
     sandbox = new(code, opts)
+    sandbox.prepare
     sandbox.eval
   end
 
   def initialize(code, opts)
     @code = code
     @language = opts[:language]
+    @sandbox = Sandbox.safe
+  end
+
+  def prepare
+    if @language == 'HTML+ERB'
+      @sandbox.require 'erb'
+      @code = "ERB.new(#{@code.inspect}).result"
+    end
   end
 
   def eval
-    sandbox = new_sandbox
-    sandbox.activate!
-    result = sandbox.eval(@code, :timeout => 1)
-  end
-
-  private
-
-  def new_sandbox
-    sandbox = Sandbox.safe
-
-    if @language == 'HTML+ERB'
-      sandbox.require 'erb'
-      @code = "ERB.new(#{@code.inspect}).result"
-    end
-
-    sandbox
+    @sandbox.activate!
+    @sandbox.eval(@code, :timeout => 0.5)
   end
 
 end
