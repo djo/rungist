@@ -10,19 +10,19 @@
       %input{:type => :text, :value => params[:gist]}
       %input{:type => :submit, :value => "Get"}
 
-    %ul#gist_files
+    %iframe#gist_scope{ :width => "100%" }
 
     %script{:type => "text/javascript", :src  => "/javascripts/jquery.min.js"}
-    %script{:type => "text/javascript", :src  => "/javascripts/index.js"}
+    %script{:type => "text/javascript", :src  => "/javascripts/autoheight.js"}
+    %script{:type => "text/javascript", :src  => "/javascripts/gist_preview.js"}
+    %script{:type => "text/javascript", :src  => "/javascripts/run_gist.js"}
 
     :javascript
       var jsonpCallback;
-      var RG = { sandboxLanguages: #{RungistSandbox::SUPPORTED_LANGUAGES},
-                 clientLanguages: ["CSS", "JavaScript"]  };
 
       $(function () {
         // Init GistPreview
-        var gp = new GistPreview(function (data) { jsonpCallback(data) });
+        var gp = new GistPreview(#{RungistSandbox::SUPPORTED_LANGUAGES}, function (data) { jsonpCallback(data) });
         jsonpCallback = function (data) { gp.parseResponse(data) };
 
         // Init RunGist

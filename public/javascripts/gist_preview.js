@@ -1,7 +1,9 @@
-function GistPreview(callback) {
-  var form = $('#gist_form'),
-      input = $('input[type=text]', form),
-      list = $("#gist_files"),
+function GistPreview(sandboxLanguages, callback) {
+  var form = $("#gist_form"),
+      input = $("input[type=text]", form),
+      iframe = $("#gist_scope"),
+      scope = iframe.contents().find("body"),
+      list,
 
   self = {
     fetchGist: function () {
@@ -11,7 +13,8 @@ function GistPreview(callback) {
     },
 
     displayGistFiles: function (data) {
-      list.empty();
+      scope.empty();
+      self.createList();
 
       $.each(data.files, function (filename, opts) {
         var link = '<a href="' + opts.raw_url + '">' + filename + '</a>',
@@ -20,14 +23,16 @@ function GistPreview(callback) {
             result = '<div class="result"></div>';
 
         // Prepare action button for supported languages
-        if (~RG.sandboxLanguages.indexOf(opts.language))
+        if (~sandboxLanguages.indexOf(opts.language))
           button = '<a class="run" href="#run">Run</a>';
-        else if (~RG.clientLanguages.indexOf(opts.language))
+        else if (opts.language == "CSS")
           button = '<a class="apply" href="#apply">Apply</a>';
 
         list.append('<li class="gist">' + link + '<br />' + content + '<br />' + button + '<br />' + result + '</li>');
         $('.gist:last', list).data("language", opts.language);
       });
+      
+      iframe.autoheight();
     },
 
     bindEvents: function() {
@@ -51,7 +56,13 @@ function GistPreview(callback) {
       });
     },
 
+    createList: function () {
+      scope.append('<ul id="gist_list"></ul>');
+      list = $("#gist_list", scope);
+    },
+
     init: function () {
+      self.createList();
       if (input.val() != "") self.fetchGist();
       self.bindEvents();
     }
@@ -63,59 +74,12 @@ function GistPreview(callback) {
     parseResponse: function (response) {
       if (response.meta.status != 200) {
         alert(response.data.message);
-        list.empty();
+        scope.empty();
+        self.createList();
+        iframe.autoheight();
       } else {
         self.displayGistFiles(response.data);
       }
     }
   };
-}
-
-function RunGist () {
-  var list = $("#gist_files"),
-
-  self = {
-    runGist: function (e) {
-      e.preventDefault();
-
-      var link = $(this),
-          gist = link.parents('li.gist'),
-          language = gist.data('language'),
-          textarea = $('textarea', gist),
-          result = $('.result', gist);
-
-      $.post('/run', { code: textarea.val(), language: language })
-       .success(function (data) { result.html(data); })
-       .error(function (jqXHR) { alert(jqXHR.responseText); });
-    },
-
-    applyGist: function (e) {
-      e.preventDefault();
-
-      var link = $(this),
-          gist = link.parents('li.gist'),
-          language = gist.data('language'),
-          textarea = $('textarea', gist),
-          result = $('.result', gist);
-
-      if (language == 'JavaScript') {
-        $('body').append('<script type="text/javascript">' + textarea.val() + '</script>');
-        result.html("The JavaScript was executed on the page.");
-      } else if (language == 'CSS') {
-        $('body').append('<style type="text/css">' + textarea.val() + '</style>');
-        result.html("The stylesheet was applied to the page.");
-      }
-    },
-
-    bindEvents: function () {
-      list.on('click', '.run', self.runGist);
-      list.on('click', '.apply', self.applyGist);
-    },
-
-    init: function () {
-      self.bindEvents();
-    }
-  };
-
-  return self.init();
 }
