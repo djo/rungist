@@ -5,6 +5,7 @@ SANDBOX_STRING_METHODS = (Sandbox::Safe::STRING_METHODS + ['encoding', 'force_en
 Sandbox::Safe.const_set('STRING_METHODS', SANDBOX_STRING_METHODS)
 
 class RungistSandbox
+  class LanguageNotSupportedError < RuntimeError; end
 
   SUPPORTED_LANGUAGES = ['Ruby', 'HTML+ERB']
 
@@ -16,11 +17,13 @@ class RungistSandbox
 
   def initialize(code, opts)
     @code = code
-    @language = opts[:language]
+    @language = opts[:language] || 'Ruby'
     @sandbox = Sandbox.safe
   end
 
   def prepare
+    raise LanguageNotSupportedError unless SUPPORTED_LANGUAGES.include?(@language)
+
     if @language == 'HTML+ERB'
       @sandbox.require 'erb'
       @code = "ERB.new(#{@code.inspect}).result"

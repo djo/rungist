@@ -7,13 +7,13 @@ describe "RungistSandbox" do
       RungistSandbox.run('1 + 1').should eq(2)
     end
 
-    it "raises a timeout exception" do
+    it "raises the timeout exception" do
       expect {
         RungistSandbox.run('loop {}')
       }.to raise_error(Sandbox::TimeoutError)
     end
 
-    it "raises a sandbox exception" do
+    it "raises the sandbox exception" do
       expect {
         RungistSandbox.run("require 'securerandom'")
       }.to raise_error(Sandbox::SandboxException)
@@ -27,6 +27,12 @@ describe "RungistSandbox" do
       actual = "<div id='gist' class=\"gist\"><%= 1 + 1 %></div>"
       expected = "<div id='gist' class=\"gist\">2</div>"
       RungistSandbox.run(actual, :language => 'HTML+ERB').should eq(expected)
+    end
+
+    it "raises the language not supported exception" do
+      expect {
+        RungistSandbox.run("1 + 1", :language => 'JavaScript')
+      }.to raise_error(RungistSandbox::LanguageNotSupportedError)
     end
 
   end
