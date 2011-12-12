@@ -1,9 +1,7 @@
 function GistPreview(sandboxLanguages, callback) {
   var form = $("#gist_form"),
       input = $("input[type=text]", form),
-      iframe = $("#gist_scope"),
-      scope = iframe.contents().find("body"),
-      list,
+      list = $("#gist_list"),
 
   self = {
     fetchGist: function () {
@@ -13,26 +11,22 @@ function GistPreview(sandboxLanguages, callback) {
     },
 
     displayGistFiles: function (data) {
-      scope.empty();
-      self.createList();
-
-      $.each(data.files, function (filename, opts) {
+      var displayGist = function (filename, opts) {
         var link = '<a href="' + opts.raw_url + '">' + filename + '</a>',
             content = '<textarea rows="10" cols="50">' + opts.content + '</textarea>',
-            button = '',
-            result = '<div class="result"></div>';
+            iframe = '<iframe></iframe>',
+            button = '';
 
-        // Prepare action button for supported languages
         if (~sandboxLanguages.indexOf(opts.language))
           button = '<a class="run" href="#run">Run</a>';
-        else if (opts.language == "CSS")
-          button = '<a class="apply" href="#apply">Apply</a>';
+        else if (opts.language === "CSS")
+          button = '<a class="add" href="#add">Add</a>';
 
-        list.append('<li class="gist">' + link + '<br />' + content + '<br />' + button + '<br />' + result + '</li>');
-        $('.gist:last', list).data("language", opts.language);
-      });
-      
-      iframe.autoheight();
+        list.append('<li class="gist" data-language="'+ opts.language + '">' + link + '<br />' + content + '<br />' + button + '<br />' + iframe + '</li>');
+      }
+
+      list.empty();
+      $.each(data.files, displayGist);
     },
 
     bindEvents: function() {
@@ -56,13 +50,7 @@ function GistPreview(sandboxLanguages, callback) {
       });
     },
 
-    createList: function () {
-      scope.append('<ul id="gist_list"></ul>');
-      list = $("#gist_list", scope);
-    },
-
     init: function () {
-      self.createList();
       if (input.val() != "") self.fetchGist();
       self.bindEvents();
     }
@@ -73,10 +61,8 @@ function GistPreview(sandboxLanguages, callback) {
   return {
     parseResponse: function (response) {
       if (response.meta.status != 200) {
+        list.empty();
         alert(response.data.message);
-        scope.empty();
-        self.createList();
-        iframe.autoheight();
       } else {
         self.displayGistFiles(response.data);
       }

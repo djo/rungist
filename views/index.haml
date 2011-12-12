@@ -10,7 +10,7 @@
       %input{:type => :text, :value => params[:gist]}
       %input{:type => :submit, :value => "Get"}
 
-    %iframe#gist_scope{ :width => "100%" }
+    %ul#gist_list
 
     %script{:type => "text/javascript", :src  => "/javascripts/jquery.min.js"}
     %script{:type => "text/javascript", :src  => "/javascripts/autoheight.js"}
@@ -21,6 +21,11 @@
       var jsonpCallback;
 
       $(function () {
+        // Ajax Setup
+        $.ajaxSetup({ error: function (jqXHR) {
+          alert(jqXHR.responseText);
+        }});
+
         // Init GistPreview
         var gp = new GistPreview(#{RungistSandbox::SUPPORTED_LANGUAGES}, function (data) { jsonpCallback(data) });
         jsonpCallback = function (data) { gp.parseResponse(data) };

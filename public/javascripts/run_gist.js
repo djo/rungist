@@ -1,6 +1,5 @@
 function RunGist () {
-  var iframe = $("#gist_scope"),
-      scope = iframe.contents().find("body"),
+  var list = $("#gist_list"),
 
   self = {
     runGist: function (e) {
@@ -10,32 +9,35 @@ function RunGist () {
           gist = link.parents('li.gist'),
           language = gist.data('language'),
           textarea = $('textarea', gist),
-          result = $('.result', gist);
+          iframe = $('iframe', gist);
 
-      $.post('/run', { code: textarea.val(), language: language })
-       .success(function (data) { result.html(data); })
-       .error(function (jqXHR) { alert(jqXHR.responseText); });
+      var display = function (data) {
+        iframe.contents().find("body").html(data);
+        iframe.autoheight();
+      }
 
-      iframe.autoheight(); 
+      $.post('/run', { code: textarea.val(), language: language }, display);
     },
 
-    applyGist: function (e) {
+    addStyles: function (e) {
       e.preventDefault();
 
       var link = $(this),
           gist = link.parents('li.gist'),
-          language = gist.data('language'),
-          textarea = $('textarea', gist),
-          result = $('.result', gist);
+          stylesheet = '<style type="text/css">' + $('textarea', gist).val() + '</style>';
 
-      scope.append('<style type="text/css">' + textarea.val() + '</style>');
-      result.html("The stylesheet was applied to the page.");
-      iframe.autoheight();
+      $("iframe", list).each(function () {
+        var iframe = $(this);
+        iframe.contents().find('body').append(stylesheet);
+        iframe.autoheight();
+      });
+
+      gist.append("The stylesheet was applied to the page.");
     },
 
     bindEvents: function () {
-      scope.on('click', '.run', self.runGist);
-      scope.on('click', '.apply', self.applyGist);
+      list.on('click', '.run', self.runGist);
+      list.on('click', '.add', self.addStyles);
     },
 
     init: function () {
