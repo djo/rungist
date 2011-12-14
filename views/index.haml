@@ -1,35 +1,31 @@
-!!!
-%html
-  %head
-    %meta{:charset => "utf-8"}
-    %title Run gist
-  %body
-    %h1 Run gist!
+%form#gist_form
+  %input{:type => :text, :value => params[:gist], :placeholder => "gist id"}
+  %a{:href => "#fetch", :class => "submit btn", :title => "Fetch gist from github.com"}
+  %span.spinner
 
-    %form#gist_form
-      %input{:type => :text, :value => params[:gist]}
-      %input{:type => :submit, :value => "Get"}
+.languages Ruby/HTML+ERB/CSS
 
-    %ul#gist_list
+%h3#gist_title
+%ul#gist_list
 
-    %script{:type => "text/javascript", :src  => "/javascripts/jquery.min.js"}
-    %script{:type => "text/javascript", :src  => "/javascripts/autoheight.js"}
-    %script{:type => "text/javascript", :src  => "/javascripts/gist_preview.js"}
-    %script{:type => "text/javascript", :src  => "/javascripts/run_gist.js"}
+%script{:type => "text/javascript", :src  => "/javascripts/jquery.min.js"}
+%script{:type => "text/javascript", :src  => "/javascripts/autoheight.js"}
+%script{:type => "text/javascript", :src  => "/javascripts/gist_preview.js"}
+%script{:type => "text/javascript", :src  => "/javascripts/run_gist.js"}
 
-    :javascript
-      var jsonpCallback;
+:javascript
+  var jsonpCallback;
 
-      $(function () {
-        // Ajax Setup
-        $.ajaxSetup({ error: function (jqXHR) {
-          alert(jqXHR.responseText);
-        }});
+  $(function () {
+    // Ajax Setup
+    $.ajaxSetup({ error: function (jqXHR) {
+      alert(jqXHR.responseText);
+    }});
 
-        // Init GistPreview
-        var gp = new GistPreview(#{RungistSandbox::SUPPORTED_LANGUAGES}, function (data) { jsonpCallback(data) });
-        jsonpCallback = function (data) { gp.parseResponse(data) };
+    // Init GistPreview
+    var gp = new GistPreview(#{RungistSandbox::SUPPORTED_LANGUAGES.to_json}, function (data) { jsonpCallback(data) });
+    jsonpCallback = function (data) { gp.parseResponse(data) };
 
-        // Init RunGist
-        new RunGist();
-      });
+    // Init RunGist
+    new RunGist();
+  });

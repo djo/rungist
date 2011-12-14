@@ -24,7 +24,7 @@ function RunGist () {
 
       var link = $(this),
           gist = link.parents('li.gist'),
-          stylesheet = '<style type="text/css">' + $('textarea', gist).val() + '</style>';
+          stylesheet = '<style>' + $('textarea', gist).val() + '</style>';
 
       $("iframe", list).each(function () {
         var iframe = $(this);

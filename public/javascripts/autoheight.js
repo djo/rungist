@@ -6,7 +6,7 @@
     return this.each(function () {
       var iframe = $(this);
       var height = iframe.contents().find('body').height() + 50;
-      iframe.height(height);
+      iframe.show().height(height);
     });
   };
 

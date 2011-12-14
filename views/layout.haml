@@ -1,0 +1,26 @@
+!!!
+%html
+  %head
+    %title rungist
+    %meta{:charset => "utf-8"}
+    %link{:rel => "stylesheet", :href => "/stylesheets/style.css", :type => "text/css"} 
+    %link{:rel => "icon",  :type => "image/png", :href => "/images/favicon.png"}
+  %body
+    #wrapper
+      %header
+        .inner
+          %nav
+            %ul
+              %li.rungist
+                %a{:href => "/"} RUNGIST
+                %span - run ruby's gist
+              %li
+                %a{:href => "/about"} ABOUT
+              %li
+                %a{:href => "#", :target => "_blank"} CODE
+      #main
+        .inner
+          = yield
+    %footer
+      .inner
+        © 2012 Rungist by Andrew Djoga
