@@ -13,18 +13,34 @@ function GistPreview(sandboxLanguages, callback) {
 
     displayGistFiles: function (data) {
       var displayGist = function (filename, opts) {
-        var link = '<a href="' + opts.raw_url + '" class="raw" target="_blank">' + filename + '</a>',
-            content = '<div class="content"><textarea>' + opts.content + '</textarea></div>',
-            iframe = '', button = '';
-
-        if (~sandboxLanguages.indexOf(opts.language)) {
-          button = '<a class="run btn" href="#run">Run</a>';
-          iframe = '<iframe></iframe>';
-        } else if (opts.language === "CSS") {
-          button = '<a class="add btn" href="#add">Add</a>';
+        var link = function () {
+          return '<a href="' + opts.raw_url + '" class="raw" target="_blank">' + filename + '</a>';
         }
 
-        list.append('<li class="gist" data-language="'+ opts.language + '">' + link + content + button + iframe + '</li>');
+        var controls = function () {
+          if (~sandboxLanguages.indexOf(opts.language))
+            return '<a class="run btn" href="#run">Run</a><a class="edit" href="#edit">Edit</a>';
+          else if (opts.language === "CSS")
+            return '<a class="add btn" href="#add">Add</a><a class="edit" href="#edit">Edit</a><span class="info"></span>';
+          else
+            return '';
+        }
+
+        var iframe = function () {
+          if (~sandboxLanguages.indexOf(opts.language))
+            return '<iframe></iframe>';
+          else
+            return '';
+        }
+
+        var content = function () {
+          var code = '<pre><code class="' + self.highlightLanguage(opts.language) + '">' + opts.content.replace(/</g, "&lt;").replace(/>/g, "&gt;") + '</code></pre>',
+              textarea = '<textarea>' + opts.content + '</textarea>';
+
+          return '<div class="content">' + code + textarea + '</div>';
+        }
+
+        list.append('<li class="gist" data-language="'+ opts.language + '">' + link() + content() + controls() + iframe() + '</li>');
       }
 
       var displayTitle = function (data) {
@@ -35,9 +51,17 @@ function GistPreview(sandboxLanguages, callback) {
       list.empty();
       displayTitle(data);
       $.each(data.files, displayGist);
+      $("pre code").each(function(i, e) { hljs.highlightBlock(e, '    ') });
     },
 
-    bindEvents: function() {
+    highlightLanguage: function (language) {
+      if (language == 'HTML+ERB')
+        return 'html';
+      else 
+        return '';
+    },
+
+    bindEvents: function () {
       // Setup submit button
       $(".submit", form).click(function (e) { 
         e.preventDefault();

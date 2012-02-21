@@ -245,11 +245,15 @@ footer {
 
 #gist_list .content {
   margin-bottom: 0.6em;
-  min-height: 140px;
+  width: 800px;
 }
 
-#gist_list textarea{
-  display: block;
+#gist_list .content pre {
+  border: 1px solid #DEDEDE;
+}
+
+#gist_list .content textarea {
+  display: none;
   width: 800px;
   height: 140px;
 }
@@ -269,6 +273,29 @@ footer {
   background: -webkit-linear-gradient(top, #f1f1f1, #e1e1e1);
   background: linear-gradient(top, #f1f1f1, #e1e1e1);
   color: #7F5217;
+}
+
+#gist_list .edit {
+  display: inline-block;
+  margin-left: 1em;
+  padding-left: 1px;
+  border-bottom: 1px dashed;
+  color: #445588;
+  font-family: arial;
+  font-size: 0.9em;
+  text-decoration: none;
+}
+
+#gist_list .info {
+  display: inline-block;
+  margin-left: 2em;
+  color: #666;
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+#gist_list .edit:hover {
+  color: #DD1144;
 }
 
 #gist_list iframe {

@@ -24,6 +24,7 @@ function RunGist () {
 
       var link = $(this),
           gist = link.parents('li.gist'),
+          info = $('.info', gist),
           stylesheet = '<style>' + $('textarea', gist).val() + '</style>';
 
       $("iframe", list).each(function () {
@@ -32,12 +33,25 @@ function RunGist () {
         iframe.autoheight();
       });
 
-      gist.append("The stylesheet was applied to the page.");
+      info.html("The styles were added to all iframes.");
+      setTimeout(function () { info.empty() }, 3000);
+    },
+
+    editGist: function (e) {
+      e.preventDefault();
+
+      var link = $(this),
+          gist = link.parents('li.gist');
+
+      $('pre', gist).hide();
+      $('textarea', gist).show();
+      link.hide();
     },
 
     bindEvents: function () {
       list.on('click', '.run', self.runGist);
       list.on('click', '.add', self.addStyles);
+      list.on('click', '.edit', self.editGist);
     },
 
     init: function () {
