@@ -9,14 +9,19 @@ function RunGist () {
           gist = link.parents('li.gist'),
           language = gist.data('language'),
           textarea = $('textarea', gist),
-          iframe = $('iframe', gist);
+          iframe = $('iframe', gist),
+          spinner = $('.spinner', gist);
 
       var display = function (data) {
         iframe.contents().find("body").html(data);
         iframe.autoheight();
       }
 
-      $.post('/run', { code: textarea.val(), language: language }, display);
+      spinner.css('display', 'inline-block');
+
+      $.post('/run', { code: textarea.val(), language: language })
+       .success(display)
+       .complete(function () { spinner.hide(); });
     },
 
     addStyles: function (e) {

@@ -64,6 +64,7 @@ a.btn:active {
 
 .spinner {
   display: inline-block;
+  vertical-align: top;
   width: 32px;
   height: 32px;
   background-image: url(/images/spinner32.gif);
@@ -172,6 +173,7 @@ footer {
 
 #gist_form {
   margin-bottom: 0.4em;
+  height: 32px;
 }
 
 #gist_form input {
@@ -194,7 +196,11 @@ footer {
 }
 
 #gist_form .submit {
+  display: inline-block;
+  vertical-align: top;
   margin-right: 5px;
+  height: 32px;
+  width: 55px;
   background-color: #f1f1f1;
   background-image: url(/images/find.png), -moz-linear-gradient(top, #f1f1f1, #e1e1e1);
   background-image: url(/images/find.png), -webkit-linear-gradient(top, #f1f1f1, #e1e1e1);
@@ -249,6 +255,7 @@ footer {
 }
 
 #gist_list .content pre {
+  margin-top: 0;
   border: 1px solid #DEDEDE;
 }
 
@@ -258,6 +265,10 @@ footer {
   height: 140px;
 }
 
+#gist_list .controls {
+  margin-bottom: 1.5em;
+}
+
 #gist_list iframe {
   display: block;
   width: 800px;
@@ -265,14 +276,13 @@ footer {
 }
 
 #gist_list .run, #gist_list .add {
-  margin-bottom: 1.5em;
   line-height: 1.8em;
   font-size: 0.9em;
+  color: #7F5217;
   background-color: #f1f1f1;
   background: -moz-linear-gradient(top, #f1f1f1, #e1e1e1);
   background: -webkit-linear-gradient(top, #f1f1f1, #e1e1e1);
   background: linear-gradient(top, #f1f1f1, #e1e1e1);
-  color: #7F5217;
 }
 
 #gist_list .edit {
@@ -292,6 +302,11 @@ footer {
   color: #666;
   font-size: 0.9em;
   font-style: italic;
+}
+
+#gist_list .spinner {
+  display: none;
+  margin-left: 0.5em;
 }
 
 #gist_list .edit:hover {

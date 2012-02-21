@@ -1,6 +1,7 @@
 function GistPreview(sandboxLanguages, callback) {
   var form = $("#gist_form"),
       input = $("input[type=text]", form),
+      submit = $(".submit", form),
       spinner = $(".spinner", form),
       list = $("#gist_list"),
       title = $("#gist_title"),
@@ -8,6 +9,7 @@ function GistPreview(sandboxLanguages, callback) {
   self = {
     fetchGist: function () {
       spinner.show();
+      submit.attr('disabled', 'disabled');
       $.getJSON("https://api.github.com/gists/" + input.val() + "?callback=?", callback);
     },
 
@@ -18,12 +20,14 @@ function GistPreview(sandboxLanguages, callback) {
         }
 
         var controls = function () {
+          var buttons = '';
+
           if (~sandboxLanguages.indexOf(opts.language))
-            return '<a class="run btn" href="#run">Run</a><a class="edit" href="#edit">Edit</a>';
+            buttons = '<a class="run btn" href="#run">Run</a> <a class="edit" href="#edit">Edit</a> <div class="spinner"></div>';
           else if (opts.language === "CSS")
-            return '<a class="add btn" href="#add">Add</a><a class="edit" href="#edit">Edit</a><span class="info"></span>';
-          else
-            return '';
+            buttons = '<a class="add btn" href="#add">Add</a> <a class="edit" href="#edit">Edit</a> <span class="info"></span>';
+
+          return '<div class="controls">' + buttons + '</div>'
         }
 
         var iframe = function () {
@@ -62,12 +66,6 @@ function GistPreview(sandboxLanguages, callback) {
     },
 
     bindEvents: function () {
-      // Setup submit button
-      $(".submit", form).click(function (e) { 
-        e.preventDefault();
-        form.submit(); 
-      });
-
       // Submit form handler
       form.submit(function (e) {
         e.preventDefault();
@@ -90,6 +88,7 @@ function GistPreview(sandboxLanguages, callback) {
 
     init: function () {
       spinner.hide();
+      submit.removeAttr('disabled');
       self.bindEvents();
       if (input.val() != "") self.fetchGist();
     }
@@ -100,6 +99,7 @@ function GistPreview(sandboxLanguages, callback) {
   return {
     parseResponse: function (response) {
       spinner.hide();
+      submit.removeAttr('disabled');
       if (response.meta.status != 200) {
         list.empty();
         title.empty();
