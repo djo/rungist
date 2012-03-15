@@ -1,32 +1,46 @@
-%form#gist_form
-  %input{:type => :text, :value => params[:gist], :placeholder => "gist id"}
-  %button{:type => :submit, :class => "submit btn"}
-  %span.spinner
+#app
+  %form#gist_form
+    %input{:type => :text, :placeholder => 'gist id'}
+    %button{:type => :submit, :class => 'submit btn'}
+    %span.spinner
 
-.languages Ruby/HTML+ERB/CSS
+  .languages{:"data-sandbox" => RungistSandbox::SUPPORTED_LANGUAGES.to_json}
+    Ruby/HTML+ERB/CSS
 
-%h3#gist_title
-%ul#gist_list
+  %h3#gist_title
+  %ul#gist_list
 
-%script{:type => "text/javascript", :src  => "/javascripts/jquery.min.js"}
-%script{:type => "text/javascript", :src  => "/javascripts/autoheight.js"}
-%script{:type => "text/javascript", :src  => "/javascripts/gist_preview.js"}
-%script{:type => "text/javascript", :src  => "/javascripts/run_gist.js"}
-%script{:type => "text/javascript", :src  => "http://yandex.st/highlightjs/6.1/highlight.min.js"}
+-# Gist file template
+%script{:type => 'text/template', :id => 'gist_template'}
+  %a{:href => '{{raw_url}}', :class => 'raw', :target => '_blank'} {{filename}}
+  .content
+    %pre
+      %code{:class => '{{highlightLanguage}}'} {{highlightContent}}
+    %textarea {{content}}
+  .controls
+    {% if (languageType === 'sandbox') { %}
+    %a{:class => 'run btn', :href => '#run'} Run
+    %a{:class => 'edit', :href => '#edit'} Edit
+    {% } else if (languageType === 'stylesheet') { %}
+    %a{:class => 'add btn', :href => '#add'} Add
+    %a{:class => 'edit', :href => '#edit'} Edit
+    %span.info
+    {% } %}
+    .spinner
+  {% if (languageType === 'sandbox') { %}
+  %iframe
+  {% } %}
 
-:javascript
-  var jsonpCallback;
+-# Gist title template
+%script{:type => 'text/template', :id => 'title_template'}
+  %a{:href => '{{html_url}}', :target => '_blank'} {{description}}
+  %div {{created_at}}
 
-  $(function () {
-    // Ajax Setup
-    $.ajaxSetup({ error: function (jqXHR) {
-      alert(jqXHR.responseText);
-    }});
-
-    // Init GistPreview
-    var gp = new GistPreview(#{RungistSandbox::SUPPORTED_LANGUAGES.to_json}, function (data) { jsonpCallback(data) });
-    jsonpCallback = function (data) { gp.parseResponse(data) };
-
-    // Init RunGist
-    new RunGist();
-  });
+%script{:type => 'text/javascript', :src  => 'http://yandex.st/highlightjs/6.1/highlight.min.js'}
+%script{:type => 'text/javascript', :src  => '/javascripts/jquery.min.js'}
+%script{:type => 'text/javascript', :src  => '/javascripts/underscore-min.js'}
+%script{:type => 'text/javascript', :src  => '/javascripts/json2.js'}
+%script{:type => 'text/javascript', :src  => '/javascripts/backbone-min.js'}
+%script{:type => 'text/javascript', :src  => '/javascripts/backbone.localStorage-min.js'}
+%script{:type => 'text/javascript', :src  => '/javascripts/autoheight.js'}
+%script{:type => 'text/javascript', :src  => '/javascripts/rungist.js'}
