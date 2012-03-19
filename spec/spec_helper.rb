@@ -9,8 +9,5 @@ require_relative '../app.rb'
 
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
-
-  def app
-    Sinatra::Application 
-  end
+  def app; App; end
 end

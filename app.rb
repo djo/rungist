@@ -1,22 +1,44 @@
 require "sinatra/reloader" if development?
+require 'sinatra/assetpack'
 require "lib/rungist_sandbox"
 
-set :haml, :format => :html5
-set :views, File.expand_path(File.dirname(__FILE__) + '/views' )
+class App < Sinatra::Base
+  set :haml, :format => :html5
+  set :views, File.expand_path(File.dirname(__FILE__) + '/views' )
+  set :root, File.dirname(__FILE__)
 
-get '/about' do
-  haml :about
-end
+  register Sinatra::AssetPack
 
-get '/?:gist?' do
-  haml :index
-end
+  assets {
+    js :application, [
+      '/js/jquery.js',
+      '/js/underscore.js',
+      '/js/json2.js',
+      '/js/backbone.js',
+      '/js/backbone.localStorage.js',
+      '/js/highlight.pack.js',
+      '/js/autoheight.js',
+      '/js/rungist.js'
+    ]
 
-post '/run' do
-  begin
-    result = RungistSandbox.run(params[:code], :language => params[:language])
-    [200, result.to_s]
-  rescue Sandbox::SandboxException, Sandbox::TimeoutError => ex
-    [400, ex.message]
+    css :app, ['/css/*.css']
+  }
+
+  get '/about' do
+    haml :about
   end
+
+  get '/?:gist?' do
+    haml :index
+  end
+
+  post '/run' do
+    begin
+      result = RungistSandbox.run(params[:code], :language => params[:language])
+      [200, result.to_s]
+    rescue Sandbox::SandboxException, Sandbox::TimeoutError => ex
+      [400, ex.message]
+    end
+  end
+
 end
