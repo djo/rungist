@@ -1,12 +1,16 @@
-require "sinatra/reloader" if development?
+require 'sinatra/reloader' if development?
 require 'sinatra/assetpack'
-require "lib/rungist_sandbox"
+require 'lib/rungist_sandbox'
+require 'lib/simple_cache'
 
 class App < Sinatra::Base
   set :haml, :format => :html5
   set :views, File.expand_path(File.dirname(__FILE__) + '/views' )
   set :root, File.dirname(__FILE__)
 
+  # All GET requests (to assets and pages) are cached.
+  # Requests to the '/:gist' will be internal redirected to the index.html.
+  register Sinatra::SimpleCache
   register Sinatra::AssetPack
 
   assets {
@@ -24,11 +28,15 @@ class App < Sinatra::Base
     css :app, ['/css/*.css']
   }
 
-  get '/about' do
-    haml :about
+  get '/' do
+    cache haml(:index), 'index.html'
   end
 
-  get '/?:gist?' do
+  get '/about' do
+    cache haml(:about), 'about.html'
+  end
+
+  get '/:gist' do
     haml :index
   end
 
