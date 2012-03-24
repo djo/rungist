@@ -1,7 +1,7 @@
 #app
   %form#gist_form
-    %input{:type => :text, :placeholder => 'gist id'}
-    %button{:type => :submit, :class => 'submit btn'}
+    %input{:type => :text, :name => 'gist', :placeholder => 'gist id'}
+    %button{:type => :submit, :id => 'submit', :class => 'submit btn'}
     %span.spinner
 
   .languages{:"data-sandbox" => RungistSandbox::SUPPORTED_LANGUAGES.to_json}
@@ -28,7 +28,7 @@
     {% } %}
     .spinner
   {% if (languageType === 'sandbox') { %}
-  %iframe
+  %iframe{:name => '{{filename}}'}
   {% } %}
 
 -# Gist title template
@@ -37,3 +37,4 @@
   %div {{created_at}}
 
 = js :application
+= js :test if test?

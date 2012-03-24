@@ -15,4 +15,5 @@ group :test do
   gem 'rspec'
   gem 'rack-test'
   gem 'fuubar'
+  gem 'capybara'
 end

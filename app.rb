@@ -25,6 +25,10 @@ class App < Sinatra::Base
       '/js/rungist.js'
     ]
 
+    js :test, [
+      '/js/stubgetjson.js'
+    ]
+
     css :app, ['/css/*.css']
   }
 
