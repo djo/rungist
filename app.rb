@@ -53,4 +53,10 @@ class App < Sinatra::Base
     end
   end
 
+  helpers do
+    def partial(page, options={})
+      haml :"_#{page}", options.merge!(:layout => false)
+    end
+  end
+
 end

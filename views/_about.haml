@@ -1,0 +1,27 @@
+#about
+  %h3 ABOUT THE RUNGIST
+  %div
+    This is the Yet Another Try Ruby. It allows you to run a github's gist in the ruby sandbox.
+    The rungist uses iframes to display the result, it's possible to run the ERB template and apply styles to the output.
+  .link
+    Just try it:
+    %a{:href => '/2197e5943383dae614e1', :class => 'try', :'data-gist' => '2197e5943383dae614e1'} #2197e5943383dae614e1.
+  .left
+    %h4 SUPPORTED FORMATS
+    %ul
+      %li 
+        Ruby 
+        %span (safe JRuby sandbox)
+      %li 
+        HTML+ERB 
+        %span (templating system)
+      %li 
+        CSS 
+        %span (styles are applied to all iframes)
+  .right
+    %h4 IN THE BACKGROUND
+    %div It was made to show in action: JRuby/Sinatra/Backbone.js, Just for Fun :).
+    %div 
+      The code is well tested and hosted on
+      %a{:href => "#", :target => "_blank"} GitHub.
+  .clear

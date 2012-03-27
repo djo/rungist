@@ -10,6 +10,7 @@ html, body {
   padding: 0;
   font-family: helvetica,arial,sans-serif;
   font-size: 100%;
+  color: #443C43;
 }
 
 ul {
@@ -139,6 +140,7 @@ header nav li.rungist {
 
 header nav li.rungist a {
   color: #FDD017;
+  font-family: Geneva, "MS Sans Serif", sans-serif;
 }
 
 header nav li.rungist span {
@@ -161,7 +163,7 @@ header nav li a {
 
 footer {
   text-align: right;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 /*
@@ -315,4 +317,53 @@ footer {
 
 #gist_list iframe {
   display: none;
+}
+
+#about {
+ margin-top: 50px;
+ line-height: 22px;
+ font-size: 14px;
+}
+
+#about a:hover {
+  color: #7F5217;
+}
+
+#about .link {
+  margin: 7px 0 15px;
+}
+
+#about .link .try {
+  text-decoration: none;
+  border-bottom: 1px dashed;
+}
+
+#about .left {
+  float: left;
+}
+
+#about .left ul {
+  list-style-type: square;
+  margin-left: 12px;
+}
+
+#about .left ul li span {
+  color: #888888;
+}
+
+#about .right {
+  width: 475px;
+  float: right;
+}
+
+#about h4 {
+  margin-bottom: 14px;
+}
+
+.clear {
+  clear: both;
+}
+
+#about_wrapper #about {
+  margin-top: 0;
 }

@@ -2,15 +2,17 @@ require_relative "./spec_helper.rb"
 
 describe "App", :type => :request, :js => true do
 
-  it "displays about text on the start" do
+  before do
     visit '/'
+    stub_request(:data => { :message => "Not Found" }, :meta => { :status => 404 })
+  end
+
+  it "displays the about text on the start" do
+    find('#about').should be_visible
     find('#gist_list').text.should be_empty
   end
 
   it "displays not found for a wrong gist" do
-    visit '/'
-    stub_request(:data => { :message => "Not Found" }, :meta => { :status => 404 })
-
     fill_in 'gist', :with => 'wrong-gist-number'
     click_button 'submit'
 
@@ -23,7 +25,6 @@ describe "App", :type => :request, :js => true do
   context "with the selected gist" do
 
     before do
-      visit '/'
       stub_request(gist_response)
       fill_in 'gist', :with => 'gist-number'
       click_button 'submit'

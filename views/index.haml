@@ -10,6 +10,8 @@
   %h3#gist_title
   %ul#gist_list
 
+  = partial 'about'
+
 -# Gist file template
 %script{:type => 'text/template', :id => 'gist_template'}
   %a{:href => '{{raw_url}}', :class => 'raw', :target => '_blank'} {{filename}}
