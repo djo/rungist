@@ -2,25 +2,25 @@
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g,
   evaluate: /\{\%(.+?)\%\}/g
-};
+}
 
 // JQury ajax setup.
-$.ajaxSetup({ error: function (jqXHR) { alert(jqXHR.responseText); }});
+$.ajaxSetup({ error: function (jqXHR) { alert(jqXHR.responseText); }})
 
 // Application namespace.
-RG = { Models: {}, Views: {}, Config: {} };
+RG = { Models: {}, Views: {}, Config: {} }
 
 $(function () {
 
   RG.Models.GistFile = Backbone.Model.extend({
     // Returns correct language name for highlighting.
     highlightLanguage: function () {
-      return (this.get("language") === "HTML+ERB" ? "html" : "");
+      return (this.get("language") === "HTML+ERB" ? "html" : "")
     },
 
     // Returns escaped content for highlighting.
     highlightContent: function () {
-      return this.get("content").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      return this.get("content").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     },
 
     // Returns language type "sandbox", "stylesheet" or empty string.
@@ -30,12 +30,12 @@ $(function () {
       else if (lang === "CSS") { return "stylesheet" }
       else { return "" }
     }
-  });
+  })
 
   RG.GistFiles = new (Backbone.Collection.extend({
     model: RG.Models.GistFile,
     localStorage: new Store("gists-backbone")
-  }));
+  }))
 
   RG.Views.GistFile = Backbone.View.extend({
     tagName: "li",
@@ -61,26 +61,26 @@ $(function () {
         languageType: this.model.languageType()
       };
 
-      var attrs = _.extend(this.model.toJSON(), properties);
+      var attrs = _.extend(this.model.toJSON(), properties)
 
-      this.$el.html(this.template(attrs));
-      this.$el.data("language", this.model.get("language"));
+      this.$el.html(this.template(attrs))
+      this.$el.data("language", this.model.get("language"))
       // Highlight the code block
-      this.$("pre code").each(function(i, e) { hljs.highlightBlock(e, '    ') });
+      this.$("pre code").each(function(i, e) { hljs.highlightBlock(e, '    ') })
 
-      return this;
+      return this
     },
 
     // Runs code in the sandbox and puth the result into iframe.
     runGist: function (e) {
-      e.preventDefault();
+      e.preventDefault()
 
       var code = this.$("textarea").val(),
           iframe = this.$("iframe"),
           spinner = this.$(".spinner"),
-          language = this.$el.data("language");
+          language = this.$el.data("language")
 
-      spinner.css('display', 'inline-block');
+      spinner.css('display', 'inline-block')
 
       $.ajax({ 
         url: "/run",
@@ -91,39 +91,40 @@ $(function () {
         },
         success: function (data) {
           iframe.contents().find("body").html(data);
+          iframe.show();
           iframe.autoheight();
         }
-      });
+      })
     },
 
     // Displays text area.
     editGist: function (e) {
-      e.preventDefault();
+      e.preventDefault()
 
-      this.$(".edit").hide();
-      this.$("pre").hide();
-      this.$("textarea").show();
+      this.$(".edit").hide()
+      this.$("pre").hide()
+      this.$("textarea").show()
     },
 
     // Triggers the event to apply a stylesheet to all iframes.
     triggerAddStyles: function (e) {
-      e.preventDefault();
+      e.preventDefault()
 
       var info = this.$('.info'),
-          styles = '<style>' + this.$('textarea').val() + '</style>';
+          styles = '<style>' + this.$('textarea').val() + '</style>'
 
-      RG.AppView.trigger('gistview:addstyle', styles);
-      info.html("The styles were added to all iframes.");
-      setTimeout(function () { info.empty() }, 3000);
+      RG.AppView.trigger('gistview:addstyle', styles)
+      info.html("The styles were added to all iframes.")
+      setTimeout(function () { info.empty() }, 3000)
     },
 
     // Adds stylesheet to the iframe.
     addStyles: function (styles) {
-      var iframe = this.$("iframe");
+      var iframe = this.$("iframe")
 
       if (iframe.length) {
-        iframe.contents().find('body').append(styles);
-        iframe.autoheight();
+        iframe.contents().find('body').append(styles)
+        iframe.autoheight()
       }
     }
   });
@@ -139,93 +140,93 @@ $(function () {
     },
 
     initialize: function () {
-      _.bindAll(this, 'render', 'reset', 'runTryGist');
+      _.bindAll(this, 'render', 'reset', 'runTryGist')
 
       // Supported languages config.
-      RG.Config.sandboxLanguages = this.$('.languages').data('sandbox');
+      RG.Config.sandboxLanguages = this.$('.languages').data('sandbox')
 
       // Bind reset on the collection.
-      RG.GistFiles.bind('reset', this.reset);
+      RG.GistFiles.bind('reset', this.reset)
 
       // Bind adding stylesheet event.
-      this.bind('gistview:addstyle', this.addStyles);
+      this.bind('gistview:addstyle', this.addStyles)
 
-      this.input = this.$('form input');
-      this.title = this.$('#gist_title');
-      this.spinner = this.$('form .spinner');
-      this.about = this.$('#about');
-      this.spinner.hide();
+      this.input = this.$('form input')
+      this.title = this.$('#gist_title')
+      this.spinner = this.$('form .spinner')
+      this.about = this.$('#about')
+      this.spinner.hide()
     },
 
     render: function (data) {
       // Reset the list.
-      RG.GistFiles.reset(_.values(data.files));
+      RG.GistFiles.reset(_.values(data.files))
 
       // Set an ID in the form input.
-      this.input.val(data.id);
+      this.input.val(data.id)
 
       // Change the header.
       this.title.html(this.titleTemplate({
         html_url: data.html_url,
         description: data.description,
         created_at: this._localeDate(data.created_at)
-      }));
+      }))
 
-      this.spinner.hide();
+      this.spinner.hide()
 
-      return this;
+      return this
     },
 
     // Triggers navigation to a new gist.
     fetchGist: function (e) {
-      e.preventDefault();
-      RG.Router.navigate(this.input.val(), { trigger: true });
+      e.preventDefault()
+      RG.Router.navigate(this.input.val(), { trigger: true })
     },
 
     // Triggers navigation to the "try" gist.
     runTryGist: function (e) {
-      e.preventDefault();
-      RG.Router.navigate(this.$('.try').data('gist'), { trigger: true });
+      e.preventDefault()
+      RG.Router.navigate(this.$('.try').attr('href'), { trigger: true })
     },
 
     // Displays all gist files in the list.
     // Toogle the about (help text) depending on the presence of the collection.
     reset: function () {
-      var list = this.$('#gist_list');
+      var list = this.$('#gist_list')
 
-      RG.GistFileViews = [];
-      list.empty();
+      RG.GistFileViews = []
+      list.empty()
 
       if (RG.GistFiles.length) {
         RG.GistFiles.each(function (gistFile) {
-          var view = new RG.Views.GistFile({ model: gistFile });
-          RG.GistFileViews.push(view);
-          list.append(view.render().el);
-        });
+          var view = new RG.Views.GistFile({ model: gistFile })
+          RG.GistFileViews.push(view)
+          list.append(view.render().el)
+        })
 
-        this.about.hide();
+        this.about.hide()
       } else {
-        this.about.show();
+        this.about.show()
       }
     },
 
     // Shows snippet on run gist event.
     showSpinner: function () {
-      this.spinner.show();
+      this.spinner.show()
     },
 
     // Adds stylesheet to all views.
     addStyles: function (styles) {
       _.each(RG.GistFileViews, function (view) { 
-        view.addStyles(styles);
+        view.addStyles(styles)
       });
     },
 
     // Formats date to local string.
     _localeDate: function (date) {
-      if (_.isUndefined(date)) return '';
-      var parsed = new Date(Date.parse(date));
-      return parsed.toLocaleString();
+      if (_.isUndefined(date)) return ''
+      var parsed = new Date(Date.parse(date))
+      return parsed.toLocaleString()
     }
   }));
 
@@ -237,21 +238,21 @@ $(function () {
 
     // Shows the about page.
     about: function () {
-      RG.AppView.render({});
+      RG.AppView.render({})
     },
 
     // Navigates to a new gist.
     fetch: function(id) {
-      RG.AppView.showSpinner();
+      RG.AppView.showSpinner()
 
       $.getJSON("https://api.github.com/gists/" + id + "?callback=?", function (response) {
-        RG.AppView.render(response.data);
-        if (response.meta.status != 200) alert(response.data.message);
-      });
+        RG.AppView.render(response.data)
+        if (response.meta.status != 200) alert(response.data.message)
+      })
     }
-  }));
+  }))
 
   // Push state history.
-  Backbone.history.start({ pushState: true });
+  Backbone.history.start({ pushState: true })
 
-});
+})

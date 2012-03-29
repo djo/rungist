@@ -1,4 +1,5 @@
 .bundle
 bin
 vendor/bundle
+.sass-cache
 

@@ -5,7 +5,7 @@ require 'lib/simple_cache'
 
 class App < Sinatra::Base
   set :haml, :format => :html5
-  set :views, File.expand_path(File.dirname(__FILE__) + '/views' )
+  set :views, File.expand_path(File.dirname(__FILE__) + '/views')
   set :root, File.dirname(__FILE__)
 
   # All GET requests (to assets and pages) are cached.
@@ -29,7 +29,7 @@ class App < Sinatra::Base
       '/js/stubgetjson.js'
     ]
 
-    css :app, ['/css/*.css']
+    css :application, ['/css/*.css']
   }
 
   get '/' do
