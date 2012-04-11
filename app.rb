@@ -3,13 +3,13 @@ require 'sinatra/assetpack'
 require 'lib/rungist_sandbox'
 require 'lib/simple_cache'
 
+# All GET requests (to assets and pages) are cached.
+# Requests to the '/:gist' will be internal redirected to the index.html.
 class App < Sinatra::Base
   set :haml, :format => :html5
   set :views, File.expand_path(File.dirname(__FILE__) + '/views')
   set :root, File.dirname(__FILE__)
 
-  # All GET requests (to assets and pages) are cached.
-  # Requests to the '/:gist' will be internal redirected to the index.html.
   register Sinatra::SimpleCache
   register Sinatra::AssetPack
 
@@ -25,9 +25,7 @@ class App < Sinatra::Base
       '/js/rungist.js'
     ]
 
-    js :test, [
-      '/js/stubgetjson.js'
-    ]
+    js :test, ['/js/stubgetjson.js']
 
     css :application, ['/css/*.css']
   }

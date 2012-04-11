@@ -4,7 +4,6 @@ _.templateSettings = {
   evaluate: /\{\%(.+?)\%\}/g
 }
 
-// JQury ajax setup.
 $.ajaxSetup({ error: function (jqXHR) { alert(jqXHR.responseText); }})
 
 // Application namespace.
@@ -23,7 +22,7 @@ $(function () {
       return this.get("content").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     },
 
-    // Returns language type "sandbox", "stylesheet" or empty string.
+    // Returns language type fo the sandbox.
     languageType: function () {
       var lang = this.get("language");
       if (~RG.Config.sandboxLanguages.indexOf(lang)) { return "sandbox" }
@@ -65,13 +64,12 @@ $(function () {
 
       this.$el.html(this.template(attrs))
       this.$el.data("language", this.model.get("language"))
-      // Highlight the code block
       this.$("pre code").each(function(i, e) { hljs.highlightBlock(e, '    ') })
 
       return this
     },
 
-    // Runs code in the sandbox and puth the result into iframe.
+    // Runs code in the sandbox and puts the result into iframe.
     runGist: function (e) {
       e.preventDefault()
 
@@ -97,7 +95,6 @@ $(function () {
       })
     },
 
-    // Displays text area.
     editGist: function (e) {
       e.preventDefault()
 
@@ -106,7 +103,7 @@ $(function () {
       this.$("textarea").show()
     },
 
-    // Triggers the event to apply a stylesheet to all iframes.
+    // Triggers the event to apply a stylesheet to all iframes on the page.
     triggerAddStyles: function (e) {
       e.preventDefault()
 
@@ -118,7 +115,6 @@ $(function () {
       setTimeout(function () { info.empty() }, 3000)
     },
 
-    // Adds stylesheet to the iframe.
     addStyles: function (styles) {
       var iframe = this.$("iframe")
 
@@ -142,13 +138,10 @@ $(function () {
     initialize: function () {
       _.bindAll(this, 'render', 'reset', 'runTryGist')
 
-      // Supported languages config.
       RG.Config.sandboxLanguages = this.$('.languages').data('sandbox')
 
-      // Bind reset on the collection.
       RG.GistFiles.bind('reset', this.reset)
 
-      // Bind adding stylesheet event.
       this.bind('gistview:addstyle', this.addStyles)
 
       this.input = this.$('form input')
@@ -159,7 +152,6 @@ $(function () {
     },
 
     render: function (data) {
-      // Reset the list.
       RG.GistFiles.reset(_.values(data.files))
 
       // Set an ID in the form input.
@@ -189,8 +181,8 @@ $(function () {
       RG.Router.navigate(this.$('.try').attr('href'), { trigger: true })
     },
 
-    // Displays all gist files in the list.
-    // Toogle the about (help text) depending on the presence of the collection.
+    // Displays all gist files in the list,
+    // toggles the about (help text) depending on the presence of the collection.
     reset: function () {
       var list = this.$('#gist_list')
 
@@ -210,19 +202,16 @@ $(function () {
       }
     },
 
-    // Shows snippet on run gist event.
     showSpinner: function () {
       this.spinner.show()
     },
 
-    // Adds stylesheet to all views.
     addStyles: function (styles) {
       _.each(RG.GistFileViews, function (view) { 
         view.addStyles(styles)
       });
     },
 
-    // Formats date to local string.
     _localeDate: function (date) {
       if (_.isUndefined(date)) return ''
       var parsed = new Date(Date.parse(date))
@@ -236,12 +225,10 @@ $(function () {
       ':id': 'fetch'
     },
 
-    // Shows the about page.
     about: function () {
       RG.AppView.render({})
     },
 
-    // Navigates to a new gist.
     fetch: function(id) {
       RG.AppView.showSpinner()
 
@@ -252,7 +239,6 @@ $(function () {
     }
   }))
 
-  // Push state history.
   Backbone.history.start({ pushState: true })
 
 })

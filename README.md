@@ -13,4 +13,4 @@ The rungist uses iframes to display the result, it's possible to run the ERB tem
 ### Under the hood
 
 It was made to show in action: JRuby/Sinatra/Backbone.js, Just for Fun :).  
-The code is well tested and hosted on GitHub.
+The code is well-tested and hosted on GitHub.
