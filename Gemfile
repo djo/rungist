@@ -6,7 +6,8 @@ gem 'jruby_sandbox'
 gem 'haml'
 gem 'sass'
 gem 'json'
-gem 'sinatra-assetpack', '0.0.12.pre1', :require => 'sinatra/assetpack'
+gem 'sinatra-assetpack', :require => 'sinatra/assetpack'
+gem 'puma'
 
 group :development do
   gem 'sinatra-contrib'
