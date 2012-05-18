@@ -1,5 +1,4 @@
 require 'sinatra/reloader' if development?
-require 'sinatra/assetpack'
 require 'lib/rungist_sandbox'
 require 'lib/simple_cache'
 
@@ -11,24 +10,6 @@ class App < Sinatra::Base
   set :root, File.dirname(__FILE__)
 
   register Sinatra::SimpleCache
-  register Sinatra::AssetPack
-
-  assets {
-    js :application, [
-      '/js/jquery.js',
-      '/js/underscore.js',
-      '/js/json2.js',
-      '/js/backbone.js',
-      '/js/backbone.localStorage.js',
-      '/js/highlight.pack.js',
-      '/js/autoheight.js',
-      '/js/rungist.js'
-    ]
-
-    js :test, ['/js/stubgetjson.js']
-
-    css :application, ['/css/*.css']
-  }
 
   get '/' do
     cache haml(:index), 'index.html'

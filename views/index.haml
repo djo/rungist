@@ -38,5 +38,7 @@
   %a{:href => '{{html_url}}', :target => '_blank'} {{description}}
   %div {{created_at}}
 
-= js :application
-= js :test if test?
+%script{:type => 'text/javascript', :src  => '/javascripts/application.js'}
+
+- if test?
+  %script{:type => 'text/javascript', :src  => '/javascripts/test.js'}

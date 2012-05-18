@@ -2,11 +2,11 @@ source :rubygems
 
 gem 'rake'
 gem 'sinatra'
-gem 'jruby_sandbox'
+gem 'sprockets'
 gem 'haml'
 gem 'sass'
 gem 'json'
-gem 'sinatra-assetpack', :require => 'sinatra/assetpack'
+gem 'jruby_sandbox'
 gem 'puma'
 
 group :development do
