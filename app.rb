@@ -2,8 +2,6 @@ require 'sinatra/reloader' if development?
 require 'lib/rungist_sandbox'
 require 'lib/simple_cache'
 
-# All GET requests (to assets and pages) are cached.
-# Requests to the '/:gist' will be internal redirected to the index.html.
 class App < Sinatra::Base
   set :haml, :format => :html5
   set :views, File.expand_path(File.dirname(__FILE__) + '/views')

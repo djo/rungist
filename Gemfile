@@ -1,6 +1,7 @@
 source :rubygems
 
 gem 'rake'
+gem 'jruby-openssl'
 gem 'sinatra'
 gem 'sprockets'
 gem 'haml'
@@ -11,6 +12,7 @@ gem 'puma'
 
 group :development do
   gem 'sinatra-contrib'
+  gem 'capistrano'
 end
 
 group :test do
