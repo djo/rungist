@@ -77,6 +77,8 @@ footer {
   clear: both;
   text-align: right;
   font-size: 0.9em; }
+  footer a {
+    color: #111; }
 
 .inner {
   margin-left: auto;
