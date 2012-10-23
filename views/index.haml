@@ -12,7 +12,6 @@
 
   = partial 'about'
 
--# Gist file template
 %script{:type => 'text/template', :id => 'gist_template'}
   %a{:href => '{{raw_url}}', :class => 'raw', :target => '_blank'} {{filename}}
   .content
@@ -33,7 +32,6 @@
   %iframe{:name => '{{filename}}'}
   {% } %}
 
--# Gist title template
 %script{:type => 'text/template', :id => 'title_template'}
   %a{:href => '{{html_url}}', :target => '_blank'} {{description}}
   %div {{created_at}}

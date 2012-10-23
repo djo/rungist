@@ -1,7 +1,6 @@
 require_relative "./spec_helper.rb"
 
-describe "App", :type => :request, :js => true do
-
+describe "Application", :type => :request, :js => true do
   before do
     visit '/'
     stub_request(:data => { :message => "Not Found" }, :meta => { :status => 404 })
@@ -12,7 +11,7 @@ describe "App", :type => :request, :js => true do
     find('#gist_list').text.should be_empty
   end
 
-  it "displays not found for a wrong gist" do
+  it "displays not found for an wrong gist" do
     fill_in 'gist', :with => 'wrong-gist-number'
     click_button 'submit'
 
@@ -23,7 +22,6 @@ describe "App", :type => :request, :js => true do
   end
 
   context "with the selected gist" do
-
     before do
       stub_request(gist_response)
       fill_in 'gist', :with => 'gist-number'
@@ -68,12 +66,10 @@ describe "App", :type => :request, :js => true do
 
   end
 
-  # Stub request via JSONP helper.
   def stub_request(response)
     page.execute_script "$.stubGetJSON(#{response.to_json})"
   end
 
-  # The successful gist response.
   def gist_response
     erb = "<h1><%= ['H', 'e', 'l', 'l', 'o'].join %><h1>"
     css = "h1 { color: red; }"
@@ -85,5 +81,4 @@ describe "App", :type => :request, :js => true do
                              'style.css' => { :language => 'CSS', :filename => 'style.css', :raw_url => '#style', :content => css } } },
       :meta => { :status => 200 }}
   end
-
 end

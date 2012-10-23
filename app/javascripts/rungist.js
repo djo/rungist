@@ -1,4 +1,4 @@
-// Use mustache syntax for templates.
+// Mustache syntax for templates
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g,
   evaluate: /\{\%(.+?)\%\}/g
@@ -6,23 +6,20 @@ _.templateSettings = {
 
 $.ajaxSetup({ error: function (jqXHR) { alert(jqXHR.responseText); }})
 
-// Application namespace.
+// Application namespace
 RG = { Models: {}, Views: {}, Config: {} }
 
 $(function () {
 
   RG.Models.GistFile = Backbone.Model.extend({
-    // Returns correct language name for highlighting.
     highlightLanguage: function () {
       return (this.get("language") === "HTML+ERB" ? "html" : "")
     },
 
-    // Returns escaped content for highlighting.
     highlightContent: function () {
       return this.get("content").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     },
 
-    // Returns language type fo the sandbox.
     languageType: function () {
       var lang = this.get("language");
       if (~RG.Config.sandboxLanguages.indexOf(lang)) { return "sandbox" }
@@ -69,7 +66,6 @@ $(function () {
       return this
     },
 
-    // Runs code in the sandbox and puts the result into iframe.
     runGist: function (e) {
       e.preventDefault()
 
@@ -103,7 +99,6 @@ $(function () {
       this.$("textarea").show()
     },
 
-    // Triggers the event to apply a stylesheet to all iframes on the page.
     triggerAddStyles: function (e) {
       e.preventDefault()
 
@@ -154,10 +149,8 @@ $(function () {
     render: function (data) {
       RG.GistFiles.reset(_.values(data.files))
 
-      // Set an ID in the form input.
       this.input.val(data.id)
 
-      // Change the header.
       this.title.html(this.titleTemplate({
         html_url: data.html_url,
         description: data.description,
@@ -169,20 +162,16 @@ $(function () {
       return this
     },
 
-    // Triggers navigation to a new gist.
     fetchGist: function (e) {
       e.preventDefault()
       RG.Router.navigate(this.input.val(), { trigger: true })
     },
 
-    // Triggers navigation to the "try" gist.
     runTryGist: function (e) {
       e.preventDefault()
       RG.Router.navigate(this.$('.try').attr('href'), { trigger: true })
     },
 
-    // Displays all gist files in the list,
-    // toggles the about (help text) depending on the presence of the collection.
     reset: function () {
       var list = this.$('#gist_list')
 
@@ -240,5 +229,4 @@ $(function () {
   }))
 
   Backbone.history.start({ pushState: true })
-
 })

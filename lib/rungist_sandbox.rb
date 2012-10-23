@@ -9,30 +9,21 @@ class RungistSandbox
 
   SUPPORTED_LANGUAGES = ['Ruby', 'HTML+ERB']
 
-  def self.run(code, opts = {})
-    sandbox = new(code, opts)
-    sandbox.prepare
-    sandbox.eval
-  end
-
-  def initialize(code, opts)
+  def initialize(code, language = nil)
     @code = code
-    @language = opts[:language] || 'Ruby'
-    @sandbox = Sandbox.safe
-  end
-
-  def prepare
+    @language = language || 'Ruby'
     raise LanguageNotSupportedError unless SUPPORTED_LANGUAGES.include?(@language)
-
-    if @language == 'HTML+ERB'
-      @sandbox.require 'erb'
-      @code = "ERB.new(#{@code.inspect}).result"
-    end
   end
 
   def eval
-    @sandbox.activate!
-    @sandbox.eval(@code, :timeout => 0.5)
-  end
+    sandbox = Sandbox.safe
 
+    if @language == 'HTML+ERB'
+      sandbox.require 'erb'
+      @code = "ERB.new(#{@code.inspect}).result"
+    end
+
+    sandbox.activate!
+    sandbox.eval(@code, :timeout => 0.5)
+  end
 end

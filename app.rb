@@ -23,7 +23,7 @@ class App < Sinatra::Base
 
   post '/run' do
     begin
-      result = RungistSandbox.run(params[:code], :language => params[:language])
+      result = RungistSandbox.new(params[:code], params[:language]).eval
       [200, result.to_s]
     rescue Sandbox::SandboxException, Sandbox::TimeoutError => ex
       [400, ex.message]
@@ -35,5 +35,4 @@ class App < Sinatra::Base
       haml :"_#{page}", options.merge!(:layout => false)
     end
   end
-
 end
