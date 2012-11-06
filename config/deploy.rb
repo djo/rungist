@@ -23,17 +23,21 @@ set :default_environment, {
 
 namespace :deploy do
   task :start, :roles => :app do
-    run "sudo /usr/bin/sv start rungist"
+    run "service puma start rungist"
   end
 
   task :restart, :roles => :app do
-    run "cd #{current_path} && bundle exec pumactl -S #{shared_path}/pids/puma.state restart"
+    run "service puma restart rungist"
   end
 
   task :stop, :roles => :app do
-    run "sudo /usr/bin/sv stop rungist"
-    run "cd #{current_path} && bundle exec pumactl -S #{shared_path}/pids/puma.state stop"
+    run "service puma stop rungist"
+  end
+
+  task :create_puma_symlink, :roles => :app do
+    run "ln -s #{shared_path}/puma #{release_path}/tmp/puma"
   end
 end
 
+after 'deploy:create_symlink', 'deploy:create_puma_symlink'
 after 'deploy', 'deploy:cleanup'
